@@ -59,15 +59,17 @@ export default function EmployeeList(data: data) {
       <EmployeeTable employees={employees} />
 
       {/* Render pagination controls */}
-      <Pagination
-        page={page}
-        totalPages={totalPages}
-        search={search}
-        sortField={sortField}
-        sortOrder={sortOrder}
-        filterDepartment={filterDepartment}
-        pageSize={pageSize}
-      />
+      {employees.length > 0 && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          search={search}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          filterDepartment={filterDepartment}
+          pageSize={pageSize}
+        />
+      )}
     </div>
   );
 }

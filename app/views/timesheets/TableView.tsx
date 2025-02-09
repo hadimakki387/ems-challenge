@@ -20,26 +20,36 @@ export default function TableView({ timesheets }: TableViewProps) {
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {timesheets.map((ts) => (
-            <tr
-              key={ts.id}
-              className="border-b border-gray-200 hover:bg-gray-100"
-            >
-              <td className="py-3 px-6 text-left">
-                <Link
-                  to={`/timesheets/${ts.id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  {ts.employee_id}
-                </Link>
+          {timesheets.length ? (
+            timesheets.map((ts) => (
+              <tr
+                key={ts.id}
+                className="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-3 px-6 text-left">
+                  <Link
+                    to={`/timesheets/${ts.id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {ts.employee_id}
+                  </Link>
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {formatTime(ts.start_time)}
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {formatTime(ts.end_time)}
+                </td>
+                <td className="py-3 px-6 text-left">{ts.summary}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4} className="py-3 px-6 text-center">
+                No timesheets found
               </td>
-              <td className="py-3 px-6 text-left">
-                {formatTime(ts.start_time)}
-              </td>
-              <td className="py-3 px-6 text-left">{formatTime(ts.end_time)}</td>
-              <td className="py-3 px-6 text-left">{ts.summary}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

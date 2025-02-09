@@ -99,11 +99,13 @@ export default function TimesheetListView(data: data) {
       {viewMode === "table" ? (
         <>
           <TableView timesheets={timesheets} />
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            getPaginationLink={getPaginationLink}
-          />
+          {timesheets.length ? (
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              getPaginationLink={getPaginationLink}
+            />
+          ) : null}
         </>
       ) : (
         <TimesheetCalendar timesheets={timesheets} />

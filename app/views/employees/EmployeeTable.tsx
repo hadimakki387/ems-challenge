@@ -28,25 +28,33 @@ export default function EmployeeTable({ employees }: EmployeeTableProps) {
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {employees.map((emp) => (
-            <tr
-              key={emp.id}
-              className="border-b border-gray-200 hover:bg-gray-100"
-            >
-              <td className="py-3 px-6 text-left">
-                <Link
-                  to={`/employees/${emp.id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  {emp.name}
-                </Link>
+          {employees.length ? (
+            employees.map((emp) => (
+              <tr
+                key={emp.id}
+                className="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-3 px-6 text-left">
+                  <Link
+                    to={`/employees/${emp.id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {emp.name}
+                  </Link>
+                </td>
+                <td className="py-3 px-6 text-left">{emp.email}</td>
+                <td className="py-3 px-6 text-left">{emp.phone}</td>
+                <td className="py-3 px-6 text-left">{emp.department}</td>
+                <td className="py-3 px-6 text-left">{emp.job_title}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5} className="py-3 px-6 text-center">
+                No employees found
               </td>
-              <td className="py-3 px-6 text-left">{emp.email}</td>
-              <td className="py-3 px-6 text-left">{emp.phone}</td>
-              <td className="py-3 px-6 text-left">{emp.department}</td>
-              <td className="py-3 px-6 text-left">{emp.job_title}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
