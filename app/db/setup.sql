@@ -1,33 +1,28 @@
--- This file contains the SQL schema, it drops all tables and recreates them
+-- ./app/db/schema.sql
 
-DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS timesheets;
-
--- To add a field to a table do
--- CREATE TABLE table_name (
---     id INTEGER PRIMARY KEY AUTOINCREMENT,
---     nullable_field TEXT,
---     non_nullable_field TEXT NOT NULL,
---     numeric_field INTEGER,
---     unique_field TEXT UNIQUE,
---     unique_non_nullable_field TEXT NOT NULL UNIQUE,
---     date_field DATE,
---     datetime_field DATETIME
--- );
-
--- Create employees table
-CREATE TABLE employees (
+-- Create the employees table
+CREATE TABLE IF NOT EXISTS employees (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    full_name TEXT NULL
-    -- Rest of the fields
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,  -- Ensures no duplicate email addresses
+    phone TEXT NOT NULL,
+    dob DATE NOT NULL,
+    job_title TEXT NOT NULL,
+    department TEXT NOT NULL,
+    salary REAL NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,               -- Nullable in case the employee is still active
+    photo_path TEXT,             -- Optional bonus field for storing the path to the employee's photo
+    documents TEXT               -- Optional bonus field for storing file paths or JSON for documents (e.g., CV, ID)
 );
 
--- Create timesheets table
-CREATE TABLE timesheets (
+-- Create the timesheets table
+CREATE TABLE IF NOT EXISTS timesheets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- Rest of the fields
+    
+    employee_id INTEGER NOT NULL,  -- Foreign key to the employees table
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
-    employee_id INTEGER NOT NULL,
-    FOREIGN KEY (employee_id) REFERENCES employees(id)
+    summary TEXT,                  -- Optional field for a work summary
+    FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
 );

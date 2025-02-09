@@ -1,53 +1,150 @@
-import { useLoaderData, Form, redirect } from "react-router";
-import { getDB } from "~/db/getDB";
+// app/routes/timesheets.new.tsx
+import { Form, redirect, useActionData, useLoaderData } from "react-router";
+import { json } from "utils/json";
+import { z } from "zod";
+import { openDb } from "~/db";
+import { EmployeeService } from "~/db/services/employeeService";
 
-export async function loader() {
-  const db = await getDB();
-  const employees = await db.all('SELECT id, full_name FROM employees');
-  return { employees };
-}
-
-import type { ActionFunction } from "react-router";
-
-export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const employee_id = formData.get("employee_id"); // <select /> input with name="employee_id"
-  const start_time = formData.get("start_time");
-  const end_time = formData.get("end_time");
-
-  const db = await getDB();
-  await db.run(
-    'INSERT INTO timesheets (employee_id, start_time, end_time) VALUES (?, ?, ?)',
-    [employee_id, start_time, end_time]
+// Define a Zod schema for the timesheet form.
+const timesheetSchema = z
+  .object({
+    startTime: z.string().min(1, { message: "Start time is required" }),
+    endTime: z.string().min(1, { message: "End time is required" }),
+    employeeId: z
+      .string()
+      .min(1, { message: "Employee selection is required" }),
+    summary: z.string().min(1, { message: "Summary is required" }),
+  })
+  .refine(
+    (data) => {
+      const start = new Date(data.startTime);
+      const end = new Date(data.endTime);
+      return start < end;
+    },
+    {
+      message: "Start time must be before end time",
+      path: ["startTime"],
+    }
   );
 
-  return redirect("/timesheets");
-}
+export let loader = async () => {
+  // Pseudo-code: load employees for the dropdown.
+  const db = await openDb();
+  const employeeService = new EmployeeService(db);
+  const employees = await employeeService.getAllEmployees();
+  return json({ employees });
+};
 
-export default function NewTimesheetPage() {
-  const { employees } = useLoaderData(); // Used to create a select input
+export let action = async ({ request }: any) => {
+  const formData = await request.formData();
+  const data = {
+    startTime: formData.get("startTime"),
+    endTime: formData.get("endTime"),
+    employeeId: formData.get("employeeId"),
+    summary: formData.get("summary"),
+  };
+
+  const result = timesheetSchema.safeParse(data);
+  if (!result.success) {
+    return json(
+      { errors: result.error.flatten().fieldErrors },
+      { status: 400 }
+    );
+  }
+
+  // Pseudo-code: Insert timesheet into DB
+  // await db.timesheet.create({ startTime, endTime, employeeId, summary });
+
+  return redirect("/timesheets");
+};
+
+export default function NewTimesheet() {
+  const actionData: any = useActionData();
+  const { employees } = useLoaderData() as any;
+  console.log("actionData", actionData);
+  
+
   return (
-    <div>
-      <h1>Create New Timesheet</h1>
-      <Form method="post">
-        <div>
-          {/* Use employees to create a select input */}
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Create New Timesheet</h1>
+      <Form method="post" className="space-y-6">
+        {/* Start Time */}
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700">Start Time:</label>
+          <input
+            type="datetime-local"
+            name="startTime"
+            className="border border-gray-300 rounded px-3 py-2"
+          />
+          {actionData?.errors?.startTime && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.startTime}
+            </p>
+          )}
         </div>
-        <div>
-          <label htmlFor="start_time">Start Time</label>
-          <input type="datetime-local" name="start_time" id="start_time" required />
+        {/* End Time */}
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700">End Time:</label>
+          <input
+            type="datetime-local"
+            name="endTime"
+            className="border border-gray-300 rounded px-3 py-2"
+          />
+          {actionData?.errors?.endTime && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.endTime}
+            </p>
+          )}
         </div>
-        <div>
-          <label htmlFor="end_time">End Time</label>
-          <input type="datetime-local" name="end_time" id="end_time" required />
+        {/* Employee Selection */}
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700">Employee:</label>
+          <select
+            name="employeeId"
+            className="border border-gray-300 rounded px-3 py-2"
+          >
+            <option value="">Select an employee</option>
+            {employees.map((emp: any) => (
+              <option key={emp.id} value={emp.id}>
+                {emp.name}
+              </option>
+            ))}
+          </select>
+          {actionData?.errors?.employeeId && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.employeeId}
+            </p>
+          )}
         </div>
-        <button type="submit">Create Timesheet</button>
+        {/* Summary */}
+        <div className="flex flex-col">
+          <label className="mb-1 font-medium text-gray-700">Summary:</label>
+          <input
+            type="text"
+            name="summary"
+            className="border border-gray-300 rounded px-3 py-2"
+          />
+          {actionData?.errors?.summary && (
+            <p className="text-red-500 text-sm mt-1">
+              {actionData.errors.summary}
+            </p>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Save Timesheet
+        </button>
       </Form>
-      <hr />
-      <ul>
-        <li><a href="/timesheets">Timesheets</a></li>
-        <li><a href="/employees">Employees</a></li>
-      </ul>
+      <div className="mt-4">
+        <button
+          onClick={() => (window.location.href = "/timesheets")}
+          className="w-full py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+        >
+          Back to Timesheets List
+        </button>
+      </div>
     </div>
   );
 }
