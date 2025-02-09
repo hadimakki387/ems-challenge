@@ -2,7 +2,6 @@
 import { Form, redirect, useActionData, useLoaderData } from "react-router";
 import { json } from "utils/json";
 import { z } from "zod";
-import { openDb } from "~/db";
 import { EmployeeService } from "~/db/services/employeeService";
 
 // Define a Zod schema for the timesheet form.
@@ -29,8 +28,7 @@ const timesheetSchema = z
 
 export let loader = async () => {
   // Pseudo-code: load employees for the dropdown.
-  const db = await openDb();
-  const employeeService = new EmployeeService(db);
+  const employeeService = new EmployeeService();
   const employees = await employeeService.getAllEmployees();
   return json({ employees });
 };
@@ -62,7 +60,6 @@ export default function NewTimesheet() {
   const actionData: any = useActionData();
   const { employees } = useLoaderData() as any;
   console.log("actionData", actionData);
-  
 
   return (
     <div className="max-w-3xl mx-auto p-6">

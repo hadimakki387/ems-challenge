@@ -1,5 +1,4 @@
 // app/routes/timesheets.$timesheetId._index.tsx
-import { openDb } from "~/db";
 import { TimesheetService } from "~/db/services/timesheetService";
 import { EmployeeService } from "~/db/services/employeeService";
 import {
@@ -28,9 +27,8 @@ const timesheetUpdateSchema = z
   });
 
 export let loader = async ({ params }: any) => {
-  const db = await openDb();
-  const timesheetService = new TimesheetService(db);
-  const employeeService = new EmployeeService(db);
+  const timesheetService = new TimesheetService();
+  const employeeService = new EmployeeService();
   const timesheet = await timesheetService.getTimesheetById(
     Number(params.timesheetId)
   );
@@ -57,8 +55,7 @@ export let action = async ({ request, params }: any) => {
   }
 
   try {
-    const db = await openDb();
-    const timesheetService = new TimesheetService(db);
+    const timesheetService = new TimesheetService();
     await timesheetService.updateTimesheet(
       Number(params.timesheetId),
       result.data as any

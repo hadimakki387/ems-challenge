@@ -1,6 +1,5 @@
 // app/routes/employees.new.tsx
 import { Form, Link, redirect, useActionData } from "react-router";
-import { openDb } from "~/db";
 import { EmployeeService } from "~/db/services/employeeService";
 import { z } from "zod";
 
@@ -15,9 +14,9 @@ export let action = async ({ request }: any) => {
     department: formData.get("department") as string,
     salary: Number(formData.get("salary")),
     start_date: formData.get("start_date") as string,
-    end_date: (formData.get("end_date") as string) || undefined,
-    photo_path: undefined,
-    documents: undefined,
+    end_date: (formData.get("end_date") as string) || null,
+    photo_path: null,
+    documents: null,
     job_type: formData.get("job_type") as string,
   };
 
@@ -48,8 +47,7 @@ export let action = async ({ request }: any) => {
   }
 
   try {
-    const db = await openDb();
-    const employeeService = new EmployeeService(db);
+    const employeeService = new EmployeeService();
     console.log("employee", employee);
     await employeeService.createEmployee(employee);
   } catch (error) {

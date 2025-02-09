@@ -1,6 +1,5 @@
 // app/routes/timesheets._index.tsx
 import { Link, useLoaderData } from "react-router";
-import { openDb } from "~/db";
 import { TimesheetService } from "~/db/services/timesheetService";
 import { z } from "zod";
 import { useState } from "react";
@@ -18,8 +17,7 @@ const timesheetSchema = z.object({
 const timesheetsSchema = z.array(timesheetSchema);
 
 export let loader = async () => {
-  const db = await openDb();
-  const timesheetService = new TimesheetService(db);
+  const timesheetService = new TimesheetService();
   const timesheets = await timesheetService.getAllTimesheets();
   // Validate the timesheets data using Zod
   const validatedTimesheets = timesheetsSchema.parse(timesheets);

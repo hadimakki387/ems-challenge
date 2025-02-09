@@ -1,93 +1,61 @@
 // db/timesheetService.ts
+import { eq } from "drizzle-orm";
+import { db } from "..";
+import { timesheetsTable } from "../schema/timesheet";
 
-import sqlite3 from "sqlite3";
-
-export interface Timesheet {
-  id?: number;
-  employee_id: number;
-  start_time: string; // Use ISO datetime strings (YYYY-MM-DDTHH:mm)
-  end_time: string; // Use ISO datetime strings
-  summary?: string;
-}
-
+export type Timesheet = Omit<typeof timesheetsTable.$inferSelect, "id">;
 export class TimesheetService {
-  private db: sqlite3.Database;
-
-  constructor(db: sqlite3.Database) {
-    this.db = db;
-  }
-
   // Get a single timesheet by ID
-  getTimesheetById(id: number): Promise<Timesheet | undefined> {
-    return new Promise((resolve, reject) => {
-      this.db.get(`SELECT * FROM timesheets WHERE id = ?`, [id], (err, row) => {
-        if (err) return reject(err);
-        resolve(row as Timesheet);
-      });
+  async getTimesheetById(id: number): Promise<Timesheet | undefined> {
+    const result = await db.query.timesheets.findMany({
+      where: eq(timesheetsTable.id, id),
     });
+    return result[0];
   }
 
   // Get all timesheets
-  getAllTimesheets(): Promise<Timesheet[]> {
-    return new Promise((resolve, reject) => {
-      this.db.all(`SELECT * FROM timesheets`, [], (err, rows) => {
-        if (err) return reject(err);
-        resolve(rows as Timesheet[]);
-      });
-    });
+  async getAllTimesheets(): Promise<Timesheet[]> {
+    return await db.query.timesheets.findMany();
   }
 
   // Create a new timesheet
-  createTimesheet(timesheet: Timesheet): Promise<{ id: number }> {
-    const { employee_id, start_time, end_time, summary = null } = timesheet;
-    return new Promise((resolve, reject) => {
-      this.db.run(
-        `INSERT INTO timesheets 
-         (employee_id, start_time, end_time, summary) 
-         VALUES (?, ?, ?, ?)`,
-        [employee_id, start_time, end_time, summary],
-        function (err) {
-          if (err) return reject(err);
-          resolve({ id: this.lastID });
-        }
-      );
-    });
+  async createTimesheet(timesheet: Timesheet): Promise<{ id: number }> {
+    const result = db
+      .insert(timesheetsTable)
+      .values({
+        employee_id: timesheet.employee_id,
+        start_time: timesheet.start_time,
+        end_time: timesheet.end_time,
+        summary: timesheet.summary,
+      })
+      .run();
+    return { id: result.lastInsertRowid as number };
   }
 
   // Update an existing timesheet
-  updateTimesheet(
+  async updateTimesheet(
     id: number,
     timesheet: Timesheet
   ): Promise<{ changes: number }> {
-    const { employee_id, start_time, end_time, summary = null } = timesheet;
-    return new Promise((resolve, reject) => {
-      this.db.run(
-        `UPDATE timesheets 
-         SET employee_id = ?, start_time = ?, end_time = ?, summary = ? 
-         WHERE id = ?`,
-        [employee_id, start_time, end_time, summary, id],
-        function (err) {
-          if (err) return reject(err);
-          resolve({ changes: this.changes });
-        }
-      );
-    });
+    const result = db
+      .update(timesheetsTable)
+      .set({
+        employee_id: timesheet.employee_id,
+        start_time: timesheet.start_time,
+        end_time: timesheet.end_time,
+        summary: timesheet.summary,
+      })
+      .where(eq(timesheetsTable.id, id))
+      .run();
+    return { changes: result.changes };
   }
 
   // Delete a timesheet by ID
-  deleteTimesheet(id: number): Promise<{ changes: number }> {
-    return new Promise((resolve, reject) => {
-      this.db.run(`DELETE FROM timesheets WHERE id = ?`, [id], function (err) {
-        if (err) return reject(err);
-        resolve({ changes: this.changes });
-      });
-    });
+  async deleteTimesheet(id: number): Promise<{ changes: number }> {
+    const result = db
+      .delete(timesheetsTable)
+      .where(eq(timesheetsTable.id, id))
+      .run();
+    return { changes: result.changes };
   }
 }
-
-// Example of initializing the TimesheetService:
-// (async () => {
-//   const db = await openDb();
-//   const timesheetService = new TimesheetService(db);
-//   // Use timesheetService.getAllTimesheets(), etc.
-// })();

@@ -6,7 +6,6 @@ import {
   useActionData,
   useLoaderData,
 } from "react-router";
-import { openDb } from "~/db";
 import { EmployeeService } from "~/db/services/employeeService";
 import { z } from "zod";
 
@@ -27,8 +26,7 @@ const employeeSchema = z.object({
 });
 
 export let loader = async ({ params }: any) => {
-  const db = await openDb();
-  const employeeService = new EmployeeService(db);
+  const employeeService = new EmployeeService();
   const employee = await employeeService.getEmployeeById(
     Number(params.employeeId)
   );
@@ -62,8 +60,7 @@ export let action = async ({ request, params }: any) => {
   }
 
   try {
-    const db = await openDb();
-    const employeeService = new EmployeeService(db);
+    const employeeService = new EmployeeService();
     await employeeService.updateEmployee(
       Number(params.employeeId),
       employee as any

@@ -1160,6 +1160,21 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.34.6.tgz#f3d03ce2d82723eb089188ea1494a719b09e1561"
   integrity sha512-0PVwmgzZ8+TZ9oGBmdZoQVXflbvuwzN/HRclujpl4N/q3i+y0lqLw8n1bXA8ru3sApDjlmONaNAuYr38y1Kr9w==
 
+"@schedule-x/events-service@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@schedule-x/events-service/-/events-service-2.18.0.tgz#6df40073bb72bcf290d6a0c167b372bb86d319e8"
+  integrity sha512-6PhcTl/Fk9GRjHINN3u7OmpMAO5ZKthjXBVIgpsuq4yopnWlYw3WFEVSw/0ahDGCN663cPb7N1KrEP9Lxvu8QQ==
+
+"@schedule-x/react@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@schedule-x/react/-/react-2.18.0.tgz#7184e75a937f54ebe0c82b3ad8c5e5caa2d2e9fc"
+  integrity sha512-iIUyZyLY+25fXddOUriUtiY7oBB/gofcWuFueVVWn97Zo03IJ+ptaCvvBRnVZJ2srPqt6huxFso8BEEygNfyog==
+
+"@schedule-x/theme-default@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@schedule-x/theme-default/-/theme-default-2.18.0.tgz#95cfca1a6d4f702468b6271b8ca577fff705ba3c"
+  integrity sha512-o4OzFzxxz2nSi7iaCVca5Vi6HAgnQvpZerJcd+3lqNejnB9RL7PUWxmC3DBbP5W6Y9ggUzKFywM1/6kx1LpxEQ==
+
 "@tailwindcss/node@^4.0.5":
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/@tailwindcss/node/-/node-4.0.5.tgz#f21396215e701873a2455588f89b25909e2c66ec"
@@ -1256,6 +1271,13 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
+"@types/better-sqlite3@^7.6.12":
+  version "7.6.12"
+  resolved "https://registry.yarnpkg.com/@types/better-sqlite3/-/better-sqlite3-7.6.12.tgz#e5712d46d71097dcc2775c0b068072eadc15deb7"
+  integrity sha512-fnQmj8lELIj7BSrZQAdBMHEHX8OZLYIHXqAKT1O7tDfLxaINzf00PMjw22r3N/xXh0w/sGHlO6SVaCQ2mj78lg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/cookie@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.6.0.tgz#eac397f28bf1d6ae0ae081363eca2f425bedf0d5"
@@ -1276,7 +1298,7 @@
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-4.0.9.tgz#cd82382c4f902fed9691a2ed79ec68c5898af4c2"
   integrity sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==
 
-"@types/node@^22.13.1":
+"@types/node@*", "@types/node@^22.13.1":
   version "22.13.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.13.1.tgz#a2a3fefbdeb7ba6b89f40371842162fac0934f33"
   integrity sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==
@@ -1458,6 +1480,14 @@ beautify@^0.0.8:
     cssbeautify "^0.3.1"
     html "^1.0.0"
     js-beautify "^1.6.4"
+
+better-sqlite3@^11.8.1:
+  version "11.8.1"
+  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-11.8.1.tgz#bcb1c494984065a7ed76a5df5ecbcb0f068d47fa"
+  integrity sha512-9BxNaBkblMjhJW8sMRZxnxVTRgbRmssZW0Oxc1MPBTfiR+WW21e2Mk4qu8CzrcZb1LwPCnFsfDEzq+SNcBU8eg==
+  dependencies:
+    bindings "^1.5.0"
+    prebuild-install "^7.1.1"
 
 bindings@^1.5.0:
   version "1.5.0"
@@ -1962,6 +1992,11 @@ dom-helpers@^3.3.1:
   integrity sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==
   dependencies:
     "@babel/runtime" "^7.1.2"
+
+drizzle-orm@^0.39.2:
+  version "0.39.2"
+  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.39.2.tgz#276dba08a37181fbcebc5d2a10469a1655f47f7d"
+  integrity sha512-cuopo+udkKEGGpSxCML9ZRQ43R01zYCTsbqCrb9kJkabx1QEwFlPIFoQfx6E6tuawtiX930Gwyrkwj4inlpzDg==
 
 dunder-proto@^1.0.1:
   version "1.0.1"

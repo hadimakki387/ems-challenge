@@ -1,6 +1,5 @@
 // app/routes/employees._index.tsx
 import { useState } from "react";
-import { openDb } from "~/db";
 import { EmployeeService } from "~/db/services/employeeService";
 import { z } from "zod";
 import { Link, useLoaderData } from "react-router";
@@ -19,8 +18,7 @@ const employeeSchema = z.object({
 const employeesSchema = z.array(employeeSchema);
 
 export let loader = async () => {
-  const db = await openDb();
-  const employeeService = new EmployeeService(db);
+  const employeeService = new EmployeeService();
   const employees = await employeeService.getAllEmployees();
   // Validate the data using Zod
   const validatedEmployees = employeesSchema.parse(employees);
