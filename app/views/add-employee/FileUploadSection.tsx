@@ -1,5 +1,5 @@
 // /src/views/employees/NewEmployeeForm/FileUploadSection.tsx
-import FileInput from "~/components/Form/FileInput";
+import FileInput from "~/components/FileInput";
 
 export default function FileUploadSection() {
   return (

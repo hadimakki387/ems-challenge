@@ -1,6 +1,6 @@
 // app/routes/timesheets.new.tsx
 import { Form } from "react-router";
-import TextInput from "~/components/Form/TextInput";
+import TextInput from "~/components/TextInput";
 import type { Employee } from "~/db/schema/employee";
 import type { TimeSheetActionData } from "~/interfaces/timesheet";
 

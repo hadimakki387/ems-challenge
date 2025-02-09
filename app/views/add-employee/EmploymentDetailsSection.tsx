@@ -1,6 +1,6 @@
 // /src/views/employees/NewEmployeeForm/EmploymentDetailsSection.tsx
-import SelectInput from "~/components/Form/SelectInput";
-import TextInput from "~/components/Form/TextInput";
+import SelectInput from "~/components/SelectInput";
+import TextInput from "~/components/TextInput";
 import { departments, jobTitles, jobTypes } from "~/constants/employees";
 import type { EmployeeActionData } from "~/interfaces/employee";
 

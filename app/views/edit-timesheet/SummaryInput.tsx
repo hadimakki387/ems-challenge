@@ -1,5 +1,5 @@
 // /src/views/timesheets/EditTimesheetView/SummaryInput.tsx
-import TextInput from "~/components/Form/TextInput";
+import TextInput from "~/components/TextInput";
 
 interface SummaryInputProps {
   defaultValue: string;

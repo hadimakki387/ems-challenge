@@ -1,7 +1,7 @@
 // /src/views/employees/EditEmployeeView.tsx
 import { Form, Link } from "react-router";
-import SelectInput from "~/components/Form/SelectInput";
-import TextInput from "~/components/Form/TextInput";
+import SelectInput from "~/components/SelectInput";
+import TextInput from "~/components/TextInput";
 import { departments, jobTitles, jobTypes } from "~/constants/employees";
 import type { Employee } from "~/db/schema/employee";
 import type { EmployeeActionData } from "~/interfaces/employee";

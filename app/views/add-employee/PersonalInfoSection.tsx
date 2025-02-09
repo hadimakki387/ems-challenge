@@ -1,5 +1,5 @@
 // /src/views/employees/NewEmployeeForm/PersonalInfoSection.tsx
-import TextInput from "~/components/Form/TextInput";
+import TextInput from "~/components/TextInput";
 import type { EmployeeActionData } from "~/interfaces/employee";
 
 interface PersonalInfoSectionProps {
