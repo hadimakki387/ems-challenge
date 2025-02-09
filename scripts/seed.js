@@ -24,6 +24,8 @@ const jobTitles = [
   "Marketer",
 ];
 
+const jobTypes = ["Full-time", "Part-time", "Contract", "Internship"];
+
 // Generate 20 employee records
 const employees = [];
 for (let i = 1; i <= 20; i++) {
@@ -43,6 +45,7 @@ for (let i = 1; i <= 20; i++) {
     end_date: null,
     photo_path: null,
     documents: null,
+    job_type: jobTypes[Math.floor(Math.random() * jobTypes.length)],
   });
 }
 
@@ -93,3 +96,5 @@ db.close((err) => {
     console.log("Database seeded successfully.");
   }
 });
+
+export { departments, jobTitles, jobTypes };

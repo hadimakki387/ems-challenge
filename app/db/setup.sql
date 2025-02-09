@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS employees (
     start_date DATE NOT NULL,
     end_date DATE,               -- Nullable in case the employee is still active
     photo_path TEXT,             -- Optional bonus field for storing the path to the employee's photo
-    documents TEXT               -- Optional bonus field for storing file paths or JSON for documents (e.g., CV, ID)
+    documents TEXT,               -- Optional bonus field for storing file paths or JSON for documents (e.g., CV, ID)
+    job_type TEXT NOT NULL
 );
 
 -- Create the timesheets table

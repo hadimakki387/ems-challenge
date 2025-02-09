@@ -1,6 +1,6 @@
 // db/employeeService.ts
 import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
-import { db } from "..";
+import { db } from "~/db/db.server";
 import { employeesTable } from "../schema/employee";
 
 export interface GetEmployeesParams {

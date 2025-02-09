@@ -1,9 +1,9 @@
-// db/index.ts
+// app/db/db.server.ts
 import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import * as yaml from "js-yaml";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "url"; // now allowed since this module is only used on the server
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { employeesTable } from "./schema/employee";
 import { timesheetsTable } from "./schema/timesheet";
@@ -18,7 +18,7 @@ const dbConfig = yaml.load(fs.readFileSync(dbConfigPath, "utf8")) as {
 
 const { sqlite_path: sqlitePath } = dbConfig;
 
-const sqliteDb = new Database(sqlitePath); // using better-sqlite3
+const sqliteDb = new Database(sqlitePath);
 export const db = drizzle(sqliteDb, {
   schema: {
     employees: employeesTable,

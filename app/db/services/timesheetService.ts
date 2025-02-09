@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
-import { db } from "..";
 import { timesheetsTable } from "../schema/timesheet";
+import { db } from "~/db/db.server";
 
 export interface GetTimesheetsParams {
   search?: string;

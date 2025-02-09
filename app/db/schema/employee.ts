@@ -14,6 +14,7 @@ export const employeesTable = sqliteTable("employees", {
   end_date: text("end_date"),
   photo_path: text("photo_path"),
   documents: text("documents"),
+  job_type: text("job_type").notNull(),
 });
 
 export type Employee = typeof employeesTable.$inferSelect;
