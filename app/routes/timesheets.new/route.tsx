@@ -3,21 +3,22 @@ import { Form, redirect, useActionData, useLoaderData } from "react-router";
 import { json } from "utils/json";
 import { z } from "zod";
 import { EmployeeService } from "~/db/services/employeeService";
+import { TimesheetService } from "~/db/services/timesheetService";
 
 // Define a Zod schema for the timesheet form.
 const timesheetSchema = z
   .object({
-    startTime: z.string().min(1, { message: "Start time is required" }),
-    endTime: z.string().min(1, { message: "End time is required" }),
-    employeeId: z
+    start_time: z.string().min(1, { message: "Start time is required" }),
+    end_time: z.string().min(1, { message: "End time is required" }),
+    employee_id: z
       .string()
       .min(1, { message: "Employee selection is required" }),
     summary: z.string().min(1, { message: "Summary is required" }),
   })
   .refine(
     (data) => {
-      const start = new Date(data.startTime);
-      const end = new Date(data.endTime);
+      const start = new Date(data.start_time);
+      const end = new Date(data.end_time);
       return start < end;
     },
     {
@@ -29,16 +30,16 @@ const timesheetSchema = z
 export let loader = async () => {
   // Pseudo-code: load employees for the dropdown.
   const employeeService = new EmployeeService();
-  const employees = await employeeService.getAllEmployees();
-  return json({ employees });
+  const employees = await employeeService.getEmployees({});
+  return json({ employees: employees.employees });
 };
 
 export let action = async ({ request }: any) => {
   const formData = await request.formData();
   const data = {
-    startTime: formData.get("startTime"),
-    endTime: formData.get("endTime"),
-    employeeId: formData.get("employeeId"),
+    start_time: formData.get("startTime"),
+    end_time: formData.get("endTime"),
+    employee_id: formData.get("employeeId"),
     summary: formData.get("summary"),
   };
 
@@ -49,7 +50,11 @@ export let action = async ({ request }: any) => {
       { status: 400 }
     );
   }
-
+  const timesheetService = new TimesheetService();
+  await timesheetService.createTimesheet({
+    ...result.data,
+    employee_id: Number(result.data.employee_id),
+  });
   // Pseudo-code: Insert timesheet into DB
   // await db.timesheet.create({ startTime, endTime, employeeId, summary });
 

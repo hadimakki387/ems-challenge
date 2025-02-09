@@ -1,9 +1,18 @@
-// db/timesheetService.ts
-import { eq } from "drizzle-orm";
+import { and, asc, desc, eq, like, or, sql } from "drizzle-orm";
 import { db } from "..";
 import { timesheetsTable } from "../schema/timesheet";
 
+export interface GetTimesheetsParams {
+  search?: string;
+  employeeFilter?: string;
+  page?: number;
+  pageSize?: number;
+  sortField?: string;
+  sortOrder?: "asc" | "desc";
+}
+
 export type Timesheet = Omit<typeof timesheetsTable.$inferSelect, "id">;
+
 export class TimesheetService {
   // Get a single timesheet by ID
   async getTimesheetById(id: number): Promise<Timesheet | undefined> {
@@ -13,9 +22,73 @@ export class TimesheetService {
     return result[0];
   }
 
-  // Get all timesheets
-  async getAllTimesheets(): Promise<Timesheet[]> {
-    return await db.query.timesheets.findMany();
+  // Get filtered, sorted, and paginated timesheets from the database.
+  async getTimesheets({
+    search = "",
+    employeeFilter = "",
+    page = 1,
+    pageSize = 10,
+    sortField = "start_time",
+    sortOrder = "asc",
+  }: GetTimesheetsParams = {}): Promise<{
+    timesheets: Timesheet[];
+    total: number;
+  }> {
+    const offset = (page - 1) * pageSize;
+
+    // Build the dynamic where clause.
+    let whereClause: any = undefined;
+    if (search && employeeFilter) {
+      // Filter summary by search text and employee_id by employeeFilter (exact match)
+      whereClause = and(
+        like(timesheetsTable.summary, `%${search}%`),
+        eq(timesheetsTable.employee_id, Number(employeeFilter))
+      );
+    } else if (search) {
+      whereClause = like(timesheetsTable.summary, `%${search}%`);
+    } else if (employeeFilter) {
+      whereClause = eq(timesheetsTable.employee_id, Number(employeeFilter));
+    }
+
+    // Determine the column to sort by.
+    let orderColumn;
+    switch (sortField) {
+      case "employee_id":
+        orderColumn = timesheetsTable.employee_id;
+        break;
+      case "start_time":
+        orderColumn = timesheetsTable.start_time;
+        break;
+      case "end_time":
+        orderColumn = timesheetsTable.end_time;
+        break;
+      case "summary":
+        orderColumn = timesheetsTable.summary;
+        break;
+      default:
+        orderColumn = timesheetsTable.start_time;
+    }
+
+    const orderByClause =
+      sortOrder === "asc" ? asc(orderColumn) : desc(orderColumn);
+
+    // Get the filtered and paginated timesheets.
+    const timesheets = await db
+      .select()
+      .from(timesheetsTable)
+      .where(whereClause)
+      .orderBy(orderByClause)
+      .limit(pageSize)
+      .offset(offset);
+
+    // Also retrieve the total count.
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(timesheetsTable)
+      .where(whereClause);
+    const total = countResult[0].count;
+
+    return { timesheets, total };
   }
 
   // Create a new timesheet

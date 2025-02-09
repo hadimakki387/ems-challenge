@@ -35,8 +35,8 @@ export let loader = async ({ params }: any) => {
   if (!timesheet) {
     throw new Response("Timesheet not found", { status: 404 });
   }
-  const employees = await employeeService.getAllEmployees();
-  return { timesheet, employees };
+  const employees = await employeeService.getEmployees({});
+  return { timesheet, employees: employees.employees };
 };
 
 export let action = async ({ request, params }: any) => {
